@@ -14,6 +14,15 @@ const INDUSTRIES = [
   "その他",
 ];
 
+const MAX_LENGTH = {
+  company: 200,
+  name: 100,
+  position: 100,
+  industry: 100,
+  email: 254,
+  message: 3000,
+} as const;
+
 export default function RegisterForm({
   initialType,
 }: {
@@ -27,6 +36,10 @@ export default function RegisterForm({
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    // 二重送信防止（連打・非同期処理中の再送信をブロック）
+    if (submitting) return;
+
     setError(null);
     setSubmitting(true);
 
@@ -40,6 +53,8 @@ export default function RegisterForm({
       industry: String(data.get("industry") ?? ""),
       message: String(data.get("message") ?? ""),
       requestType,
+      // Honeypot: 人間には見えない項目。botがここに値を入れると送信を静かに破棄する
+      website: String(data.get("website") ?? ""),
     };
 
     try {
@@ -70,11 +85,35 @@ export default function RegisterForm({
           : "研究登録（Research Registration）として承ります。"}
       </div>
 
+      {/* Honeypot field: 視覚的に隠し、スクリーンリーダーからも除外する。
+          実在の利用者は入力しない前提の項目。 */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+        }}
+      >
+        <label>
+          ウェブサイト
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </label>
+      </div>
+
       <Field label="会社名" required>
         <input
           name="company"
           type="text"
           required
+          maxLength={MAX_LENGTH.company}
           className="jead-input"
           placeholder="株式会社◯◯"
         />
@@ -85,6 +124,7 @@ export default function RegisterForm({
           name="name"
           type="text"
           required
+          maxLength={MAX_LENGTH.name}
           className="jead-input"
           placeholder="山田 太郎"
         />
@@ -95,6 +135,7 @@ export default function RegisterForm({
           name="position"
           type="text"
           required
+          maxLength={MAX_LENGTH.position}
           className="jead-input"
           placeholder="代表取締役"
         />
@@ -118,6 +159,7 @@ export default function RegisterForm({
           name="email"
           type="email"
           required
+          maxLength={MAX_LENGTH.email}
           className="jead-input"
           placeholder="you@example.com"
         />
@@ -127,6 +169,7 @@ export default function RegisterForm({
         <textarea
           name="message"
           rows={4}
+          maxLength={MAX_LENGTH.message}
           className="jead-input resize-none"
           placeholder="ご質問やご要望があればご記入ください"
         />
