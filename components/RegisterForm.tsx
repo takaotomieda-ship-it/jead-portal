@@ -3,8 +3,6 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-const CONTACT_EMAIL = "info@everlink-el.jp";
-
 const INDUSTRIES = [
   "製造業",
   "卸売・貿易業",
@@ -25,46 +23,43 @@ export default function RegisterForm({
   const requestType = initialType;
 
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
 
     const form = e.currentTarget;
     const data = new FormData(form);
-    const company = String(data.get("company") ?? "");
-    const name = String(data.get("name") ?? "");
-    const email = String(data.get("email") ?? "");
-    const position = String(data.get("position") ?? "");
-    const industry = String(data.get("industry") ?? "");
-    const message = String(data.get("message") ?? "");
+    const payload = {
+      company: String(data.get("company") ?? ""),
+      name: String(data.get("name") ?? ""),
+      email: String(data.get("email") ?? ""),
+      position: String(data.get("position") ?? ""),
+      industry: String(data.get("industry") ?? ""),
+      message: String(data.get("message") ?? ""),
+      requestType,
+    };
 
-    const subject =
-      requestType === "interview"
-        ? `【JEAD】経営者面談のご希望（${company}）`
-        : `【JEAD】研究登録（${company}）`;
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    const bodyLines = [
-      `会社名：${company}`,
-      `お名前：${name}`,
-      `ご役職：${position}`,
-      `業種：${industry}`,
-      `メールアドレス：${email}`,
-      "",
-      `ご希望内容：${
-        requestType === "interview" ? "経営者面談（Executive Interview）" : "研究登録（Research Registration）"
-      }`,
-      "",
-      "メッセージ：",
-      message || "（なし）",
-    ];
+      if (!res.ok) {
+        throw new Error(`request failed: ${res.status}`);
+      }
 
-    const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
-
-    window.location.href = mailtoUrl;
-    router.push("/thank-you");
+      router.push("/thank-you");
+    } catch {
+      setError(
+        "送信に失敗しました。お手数ですが、時間をおいて再度お試しいただくか、お問い合わせページより直接ご連絡ください。"
+      );
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -138,20 +133,28 @@ export default function RegisterForm({
       </Field>
 
       <p className="text-xs leading-relaxed text-jead-muted">
-        送信すると、お使いのメールアプリが開きご入力内容が反映されます。内容をご確認のうえ、
-        そのまま送信してください。ご入力いただいた情報は
+        送信いただいた内容は、運営事務局（info@everlink-el.jp）宛に送付されます。ご入力いただいた情報は
         <a href="/ethics" className="mx-1 underline underline-offset-4">
           研究倫理
         </a>
         に基づき取り扱います。
       </p>
 
+      {error && (
+        <p
+          role="alert"
+          className="rounded-sm border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
         disabled={submitting}
         className="w-full rounded-sm bg-jead-navy px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-jead-navy-light disabled:opacity-60 sm:w-auto"
       >
-        {submitting ? "送信準備中…" : "送信する"}
+        {submitting ? "送信中…" : "送信する"}
       </button>
     </form>
   );
