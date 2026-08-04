@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jead-navy: #1b2a4a;
+  --color-jead-navy-light: #2c3e63;
+  --color-jead-gold: #a98a4b;
+  --color-jead-paper: #f7f7f5;
+  --color-jead-ink: #1f2430;
+  --color-jead-muted: #5b6472;
+  --color-jead-line: #e4e2dc;
+
+  --font-sans: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
+    "Noto Sans JP", Meiryo, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-jead-paper);
+  color: var(--color-jead-ink);
+  font-family: var(--font-sans);
+}
+
+@layer components {
+  .jead-input {
+    @apply w-full rounded-sm border border-jead-line bg-white px-3.5 py-2.5 text-sm text-jead-ink outline-none transition-colors placeholder:text-jead-muted/70 focus:border-jead-navy;
+  }
+}
