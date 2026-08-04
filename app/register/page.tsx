@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Container from "@/components/Container";
 import PageHero from "@/components/PageHero";
 import RegisterForm from "@/components/RegisterForm";
@@ -9,7 +8,14 @@ export const metadata: Metadata = {
   description: "JEADへの参加登録フォーム。",
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const initialType = params.type === "interview" ? "interview" : "registration";
+
   return (
     <div>
       <PageHero
@@ -19,9 +25,7 @@ export default function RegisterPage() {
       />
 
       <Container className="py-14">
-        <Suspense fallback={null}>
-          <RegisterForm />
-        </Suspense>
+        <RegisterForm initialType={initialType} />
       </Container>
     </div>
   );

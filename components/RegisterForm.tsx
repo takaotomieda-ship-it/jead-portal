@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 const CONTACT_EMAIL = "contact@jead-research.example.jp";
@@ -16,12 +16,13 @@ const INDUSTRIES = [
   "その他",
 ];
 
-export default function RegisterForm() {
+export default function RegisterForm({
+  initialType,
+}: {
+  initialType: "registration" | "interview";
+}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const requestType = searchParams.get("type") === "interview"
-    ? "interview"
-    : "registration";
+  const requestType = initialType;
 
   const [submitting, setSubmitting] = useState(false);
 
