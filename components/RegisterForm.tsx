@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-const CONTACT_EMAIL = "contact@jead-research.example.jp";
+const CONTACT_EMAIL = "info@everlink-el.jp";
 
 const INDUSTRIES = [
   "製造業",
