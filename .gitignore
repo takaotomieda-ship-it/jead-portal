@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# generated QR codes (regenerate against the real deployed URL via `npm run qr`)
+/qr
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
