@@ -31,10 +31,11 @@ export default function ParticipationPage() {
         <PathCard
           step="2"
           title="簡易調査（Quick Assessment）"
-          status="近日公開"
-          statusTone="soon"
-          time="10〜15分（予定）"
-          body="オンラインで完結する簡易的な経営スナップショット調査です。現在準備中のため、公開まで今しばらくお待ちください。"
+          status="受付中"
+          statusTone="active"
+          time="10〜15分"
+          body="オンラインで完結する簡易的な経営スナップショット調査です。回答後すぐに、貴社の経営基盤スナップショットとAI活用の可能性をお返しします。"
+          cta={{ label: "簡易調査を始める", href: "/quick-assessment" }}
         />
 
         <PathCard
