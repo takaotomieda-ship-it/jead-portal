@@ -206,7 +206,11 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("[api/register] Resend returned an error:", error.name);
+      console.error(
+        "[api/register] Resend returned an error:",
+        error.name,
+        error.message
+      );
       return Response.json({ error: "send_failed" }, { status: 502 });
     }
   } catch (err) {

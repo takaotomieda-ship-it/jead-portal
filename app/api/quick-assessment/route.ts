@@ -254,7 +254,7 @@ export async function POST(request: Request) {
         `【面談意向】${interestLabel}`,
       ];
 
-      await resend.emails.send({
+      const { error: sendError } = await resend.emails.send({
         from: fromEmail,
         to: notificationEmail,
         replyTo: v.email,
@@ -264,7 +264,16 @@ export async function POST(request: Request) {
           textLines.join("\n")
         )}</pre>`,
       });
-      notified = true;
+
+      if (sendError) {
+        console.error(
+          "[api/quick-assessment] Resend returned an error:",
+          sendError.name,
+          sendError.message
+        );
+      } else {
+        notified = true;
+      }
     } catch (err) {
       console.error(
         "[api/quick-assessment] Failed to send notification email:",
