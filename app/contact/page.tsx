@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "JEADへのお問い合わせ方法。",
 };
 
-const CONTACT_EMAIL = "info@everlink-el.jp";
+const CONTACT_EMAIL = "jead.research@gmail.com";
 
 export default function ContactPage() {
   return (

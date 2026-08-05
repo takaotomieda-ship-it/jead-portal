@@ -176,7 +176,7 @@ export default function RegisterForm({
       </Field>
 
       <p className="text-xs leading-relaxed text-jead-muted">
-        送信いただいた内容は、運営事務局（info@everlink-el.jp）宛に送付されます。ご入力いただいた情報は
+        送信いただいた内容は、運営事務局（jead.research@gmail.com）宛に送付されます。ご入力いただいた情報は
         <a href="/ethics" className="mx-1 underline underline-offset-4">
           研究倫理
         </a>
